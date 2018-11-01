@@ -32,13 +32,26 @@ Briefly, the authors spiked a mix of proteins called the Universal Proteomics St
 :speech_balloon: _What is shown in row/columns in the file?_
 
 
+## Github
+
+It has become good practice to share data, code and documentation related to scientific projects. Github is a collaborative environment that is based around the git versioning system.
+
+:pencil2: Go to the tutorial repository [github.com/FaroePracticalBioinformatics/tutorials18](https://github.com/FaroePracticalBioinformatics/tutorials18) and click on `Fork`.
+
+This will create a copy of the repository to you own Github space. You can then work on the code by yourself and make changes. You can also submit you changes to the main repository via a `Pull Request`.
+
+:pencil2: In your Github repository, copy the URL available under _Clone or download_.
+
+
 ## Tools
 
 While we could process this data set in Excel, this would limit us in terms of what we can do with the data, and it does not scale to larger experiments. Modern data interpretation is done programmatically. It takes time and frustration to get acquainted with this different paradigm, but you will quickly reach a point where you can do much better much faster. Several languages and frameworks make this possible, the most encountered are Python, R, Matlab, and Mathematica. They can be used in command line or via user interfaces. Recently, notebooks mixing code and comments gained popularity for their ability to combine documentation and reproducibility. Also, note that Perseus, the compagnon tool of MaxQuant allows processing large omics data sets in a graphical environment.
 
 This tutorial uses [R](https://www.r-project.org), a language that allows the simple manipulation of large datasets. We will use R from the open source [RSudio](www.rstudio.com) environment. Please make sure to have RStudio installed on your computer.
 
-:pencil2: Create a new project via the _File_ -> _New Projet_ menu. Select _New Directory_ -> _Empty Project_, and select a folder for your project. Create a new script via the _File_ -> _New File_ -> _R Script_ menu. 
+:pencil2: Create a new project via the _File_ -> _New Projet_ menu. Select _Version Control_ and put the URL to the repository copied previously.
+
+You now have an image of the repository on your computer that is synchronized with the version in Github.
 
 The commands used in this tutorial are given in line and the results produced are preceded by `##`. You can copy the commands of this tutorial in your script, where one line corresponds to a command. The commands can be run line by line using the _Run_ button. Alternatively, you can run the entire script using the _Source_ button. Note that it is also possible to run the commands in the _Console_.
 
@@ -47,6 +60,7 @@ We are going to use the [ggplot2](http://ggplot2.org/) library. If you did not i
 ```{r libraries}
 library(ggplot2)
 ```
+
 
 ## File import
 
