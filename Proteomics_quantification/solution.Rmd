@@ -1,0 +1,26 @@
+---
+title: "Possible solution"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+:pencil2: Do the same for condition _B_ and save the result in a data frame called `proteinGroupsNaFiltered`.
+
+```{r NA_B}
+
+bValues <- proteinGroupsAfiltered[, c("B1", "B2", "B3")]
+bNA <- apply(X = bValues, FUN = is.na, MARGIN = c(1, 2))
+bNaSum <- apply(X = bNA, FUN = sum, MARGIN = 1)
+
+proteinGroupsNaFiltered <- proteinGroupsAfiltered[bNaSum <= 1, ]
+
+print(paste0("# proteins excluded: ", nrow(proteinGroupsAfiltered) - nrow(proteinGroupsNaFiltered)))
+
+```
+
+
+

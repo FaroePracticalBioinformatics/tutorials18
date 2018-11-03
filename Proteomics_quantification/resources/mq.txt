@@ -1,4 +1,4 @@
-Original comparison	Species	Majority protein IDs	Fasta headers	Peptides	Razor + unique peptides	Unique peptides	Sequence coverage [%]	Unique + razor sequence coverage [%]	Unique sequence coverage [%]	Mol. weight [kDa]	A1 (raw)	A2 (raw)	A3 (raw)	B1 (raw)	B2 (raw)	B3 (raw)
+Original comparison	Species	Majority protein IDs	Fasta headers	Peptides	Razor + unique peptides	Unique peptides	Sequence coverage [%]	Unique + razor sequence coverage [%]	Unique sequence coverage [%]	Mol. weight [kDa]	A1	A2	A3	B1	B2	B3
 50Vs0.5	UPS	P63279ups	>P63279ups|UBC9_HUMAN_UPS SUMO-conjugating enzyme UBC9 (Chain 1-158) - Homo sapiens (Human)	7	7	7	53.8	53.8	53.8	18.007	1.13E+08	1.12E+08	1.12E+08			
 50Vs0.5	UPS	P01375ups	>P01375ups|TNFA_HUMAN_UPS Tumor necrosis factor, soluble form (Chain 77-233) - Homo sapiens (Human)	6	6	6	66.2	66.2	66.2	17.352	3.93E+08	3.83E+08	3.90E+08			
 50Vs0.5	UPS	P00167ups	>P00167ups|CYB5_HUMAN_UPS Cytochrome b5 (Chain 1-134, N-terminal His tag) - Homo sapiens (Human)	7	7	7	55.7	55.7	55.7	16.153	2.49E+08	2.56E+08	2.56E+08			

@@ -58,50 +58,403 @@ The commands used in this tutorial are given in line and the results produced ar
 We are going to use the [ggplot2](http://ggplot2.org/) library. If you did not install this package already, install it usng the _Packages_ tab or run `install.packages("ggplot2")`.
 
 ```{r libraries}
+
 library(ggplot2)
+
 ```
+
+_ggplot2_ has different themes for display, we are not going to use the default and instead set a theme for the whole project.
+
+```{r ggplot2_theme}
+
+theme_set(theme_bw(base_size = 11))
+
+```
+
+
 
 
 ## File import
 
-Most software output text files that can readily be imported in R as data frame. A data frame is a representation of a table just like an Excel sheet. 
-
-Please download the file [_proteinGroups_5cell-line-mix.txt_](https://github.com/mvaudel/tutorials/blob/master/Expression_data/proteinGroups_5cell-line-mix.txt) to your project folder. It should appear in the _Files_ panel.
+Most software output text files that can readily be imported in R as data frame. A data frame is a representation of a table just like an Excel sheet. The table used in our analysis is 
 
 ```{r input}
-proteinGroupsInput <- read.table(file = "proteinGroups_5cell-line-mix.txt", header = T, stringsAsFactors = F, sep = "\t")
+
+proteinGroupsInput <- read.table(file = "resources/mq.txt", header = T, stringsAsFactors = F, sep = "\t")
+
 ```
 
-You should see the proteinGroupsInput in your _Environment_ panel. You can get the size of the table using the _length_ function.
+You should see the `proteinGroupsInput` in your _Environment_ panel. You can view the file using the `View` command.
 
 ```{r input_size}
-nColumns <- length(proteinGroupsInput)
-nLines <- length(proteinGroupsInput$Protein.IDs)
-paste("Number of columns: ", nColumns, ", number of protein groups: ", nLines, sep="")
+
+View(proteinGroupsInput)
+
 ```
 
-## Filtering of the protein groups
+You can look at how many background (yeast) and spiked (UPS) proteins are found using the `table` function.
 
-MaxQuant indicates contaminants, decoy sequences, and proteins only identified by site by '+' in their columns. You can access the number of every category by using the _table_ function.
+```{r species}
 
-```{r invalid_groups_count}
-nContaminants <- table(proteinGroupsInput$Contaminant)
-paste("Number of Contaminants: ", nContaminants[2], ", Others: ", nContaminants[1], sep="")
-nDecoys <- table(proteinGroupsInput$Reverse)
-paste("Number of decoys: ", nDecoys[2], ", Others: ", nDecoys[1], sep="")
-nOnlyIdentifiedBySite <- table(proteinGroupsInput$Only.identified.by.site)
-paste("Number of only identified by site: ", nOnlyIdentifiedBySite[2], ", Others: ", nOnlyIdentifiedBySite[1], sep="")
+table(proteinGroupsInput$Species)
+
 ```
 
-Filter these lines and put the result in a new table named _proteinGroups.
+The columns with quantitative information are indicated as A1, A2, A3, B1, B2, and B3, where A and B represent the different conditions of the first column and 1, 2, and, 3 biological replicates. You can look at the distribution of intensities using the `hist` function. First, concatenate all intensities in a vector.
 
-```{r invalid_groups_filter}
-proteinGroups <- proteinGroupsInput[proteinGroupsInput$Contaminant != '+' & proteinGroupsInput$Reverse != '+' & proteinGroupsInput$Only.identified.by.site != '+',]
+```{r concat}
 
-nLines <- length(proteinGroups$Protein.IDs)
-nFiltered <- length(proteinGroupsInput$Protein.IDs) - length(proteinGroups$Protein.IDs)
-paste("New number of protein groups: ", nLines, ", Number of protein groups removed: ", nFiltered, sep="")
+allIntensities <- c(
+    proteinGroupsInput$A1,
+    proteinGroupsInput$A2,
+    proteinGroupsInput$A3,
+    proteinGroupsInput$B1,
+    proteinGroupsInput$B2,
+    proteinGroupsInput$B3
+)
+
 ```
+
+Then, simply call the hist function.
+
+```{r hist}
+
+hist(allIntensities)
+
+```
+
+As you can see, most of the intensities are on the lower side of the x axis. Plotting the histogram of the log will allow us to see how the order of magnitude of the intensities distribute.
+
+```{r histLog}
+
+hist(log10(allIntensities))
+
+```
+
+We now create log values of the intensities, and whenever we will work on the intensities in column, we will use the log values.
+
+```{r log}
+
+    proteinGroupsInput$A1_log <- log10(proteinGroupsInput$A1)
+    proteinGroupsInput$A2_log <- log10(proteinGroupsInput$A2)
+    proteinGroupsInput$A3_log <- log10(proteinGroupsInput$A3)
+    proteinGroupsInput$B1_log <- log10(proteinGroupsInput$B1)
+    proteinGroupsInput$B2_log <- log10(proteinGroupsInput$B2)
+    proteinGroupsInput$B3_log <- log10(proteinGroupsInput$B3)
+
+```
+
+In the following, we are going to use the `ggplot2` package to build plots. It is a powerful data visualization library that will allow us getting a better understanding of the data.
+
+The first step is to organize our data in a data frame with a single column contaning all the values to plot, and covariates in other columns.
+
+```{r df}
+
+nProteins <- nrow(proteinGroupsInput)
+
+intensitiesDF <- data.frame(
+    intensity = c(
+        proteinGroupsInput$A1_log,
+        proteinGroupsInput$A2_log,
+        proteinGroupsInput$A3_log,
+        proteinGroupsInput$B1_log,
+        proteinGroupsInput$B2_log,
+        proteinGroupsInput$B3_log
+    ),
+    sample = c(
+        rep("A1", nProteins),
+        rep("A2", nProteins),
+        rep("A3", nProteins),
+        rep("B1", nProteins),
+        rep("B2", nProteins),
+        rep("B3", nProteins)
+    ),
+    condition = c(
+        rep("A", nProteins),
+        rep("A", nProteins),
+        rep("A", nProteins),
+        rep("B", nProteins),
+        rep("B", nProteins),
+        rep("B", nProteins)
+    ),
+    replicate = c(
+        rep("1", nProteins),
+        rep("2", nProteins),
+        rep("3", nProteins),
+        rep("1", nProteins),
+        rep("2", nProteins),
+        rep("3", nProteins)
+    )
+)
+
+View(intensitiesDF)
+
+```
+
+Now we will build the histogram using the `geom_histogram` function and plot using the default `plot` function.
+
+```{r geom_hist}
+
+histogram <- ggplot() + geom_histogram(data = intensitiesDF, mapping = aes(x = intensity), bins = 20, na.rm = T)
+
+plot(histogram)
+
+```
+
+:speech_balloon: _Do you expect the different samples to display similar intensity distributions?_
+
+You can easily plot the different samples separately by using the `facet_grid` function.
+
+```{r facet_grid}
+
+histogram <- ggplot() + 
+    geom_histogram(data = intensitiesDF, mapping = aes(x = intensity), bins = 20, na.rm = T) +
+    facet_grid(condition ~ replicate)
+
+plot(histogram)
+
+```
+
+:pencil2: Can you plot the density instead of a histogram?
+
+A very useful way to visualize quantitative distributions is to make box plots. This can be done using the `geom_boxplot` function.
+
+```{r facet_grid}
+
+boxPlot <- ggplot() + 
+    geom_boxplot(data = intensitiesDF, mapping = aes(x = sample, y = intensity), na.rm = T)
+
+plot(boxPlot)
+
+```
+
+[:thought_balloon:6](../Answers.md#thought_balloon6) _What is represented by a box plot?_
+
+Similarly, you can display the density as _violin plot_ using the function `geom_violin`.
+
+```{r geom_violin}
+
+violinPlot <- ggplot() + 
+    geom_violin(data = intensitiesDF, mapping = aes(x = sample, y = intensity), na.rm = T)
+
+plot(violinPlot)
+
+```
+
+Note that it is possible to overlay geometries in ggplot.
+
+```{r overlay}
+
+violinPlot <- ggplot() + 
+    geom_violin(data = intensitiesDF, mapping = aes(x = sample, y = intensity), na.rm = T) +
+    geom_boxplot(data = intensitiesDF, mapping = aes(x = sample, y = intensity), width = 0.5, na.rm = T)
+
+plot(violinPlot)
+
+```
+
+
+## Missing values filtering
+
+As you might have noticed, in the previous plots we removed missing values indicated by _NA_ using `na.rm = T`. You can find them with the `is.na` function.
+
+```{r NAs}
+
+print("A1")
+sum(is.na(proteinGroupsInput$A1))
+
+print("A2")
+sum(is.na(proteinGroupsInput$A2))
+
+print("A3")
+sum(is.na(proteinGroupsInput$A3))
+
+print("B1")
+sum(is.na(proteinGroupsInput$B1))
+
+print("B2")
+sum(is.na(proteinGroupsInput$B2))
+
+print("B3")
+sum(is.na(proteinGroupsInput$B3))
+
+```
+
+:speech_balloon: _Where do missing values come from? Do you see different patterns between samples? How should we handle this?_
+
+In this tutorial, we will allow only one missing value in each condition. The following code counts the number of missing values in _A_ samples and makes a new data frame with max one missing value among _A_ samples.
+
+```{r NA_A}
+
+aValues <- proteinGroupsInput[, c("A1", "A2", "A3")]
+aNA <- apply(X = aValues, FUN = is.na, MARGIN = c(1, 2))
+aNaSum <- apply(X = aNA, FUN = sum, MARGIN = 1)
+
+proteinGroupsAfiltered <- proteinGroupsInput[aNaSum <= 1, ]
+
+print(paste0("# proteins excluded: ", nrow(proteinGroupsInput) - nrow(proteinGroupsAfiltered)))
+
+```
+
+:pencil2: Do the same for condition _B_ and save the result in a data frame called `proteinGroupsNaFiltered`.
+
+We can check the number of missing values in each condition using the `table` function again.
+
+```{r NA_table}
+
+aValues <- proteinGroupsNaFiltered[, c("A1", "A2", "A3")]
+aNA <- apply(X = aValues, FUN = is.na, MARGIN = c(1, 2))
+aNaSum <- apply(X = aNA, FUN = sum, MARGIN = 1)
+
+bValues <- proteinGroupsNaFiltered[, c("B1", "B2", "B3")]
+bNA <- apply(X = bValues, FUN = is.na, MARGIN = c(1, 2))
+bNaSum <- apply(X = bNA, FUN = sum, MARGIN = 1)
+
+allValues <- cbind(aValues, bValues)
+allNA <- apply(X = allValues, FUN = is.na, MARGIN = c(1, 2))
+allNaSum <- apply(X = allNA, FUN = sum, MARGIN = 1)
+
+print("# protein with missing values in A: ")
+table(aNaSum)
+
+print("# protein with missing values in B: ")
+table(bNaSum)
+
+print("# protein with missing values: ")
+table(allNaSum)
+
+
+```
+
+
+## Missing values imputation
+
+Many analysis methods do not support missing values, we are going to make a new data frame where missing values are imputed. Here, we hypothesize that missing values are due to proteins being below the level of quantification. We will therefore impute missing values to an arbitrarily low value.
+
+:speech_balloon: _Can you think of another way to impute missing values?_
+
+In the following code, we create a function that replaces NAs with random values generated from a normal distribution under an arbitrary level using the `rnorm` function.
+
+```{r imputation_function}
+
+impute <- function(value, mean, sd, limit) {
+    
+    if (!is.na(value)) {
+        return(value)
+    }
+    
+    while (T) {
+        
+        
+        result <- rnorm(1, mean = mean, sd = sd)
+        
+        if (result < limit) {
+            
+            return(result)
+            
+        }   
+    }
+    
+    return(NA)
+    
+}
+
+
+```
+
+We then create new columns with imputed missing values.
+
+```{r imputation}
+
+for (column in c("A1", "A2", "A3", "B1", "B2", "B3")) {
+    
+    logCol <- paste0(column, "_log")
+    imputedCol <- paste0(column, "_imputed")
+    imputedLogCol <- paste0(logCol, "_imputed")
+    
+    mean <- mean(proteinGroupsNaFiltered[, logCol], na.rm = T)
+    sd <- sd(proteinGroupsNaFiltered[, logCol], na.rm = T)
+    limit <- min(proteinGroupsNaFiltered[, logCol], na.rm = T)
+    
+    proteinGroupsNaFiltered[, imputedLogCol] <- sapply(X = proteinGroupsNaFiltered[, logCol], FUN = impute, mean = mean, sd = sd, limit = limit)
+    
+    proteinGroupsNaFiltered[, imputedCol] <- 10 ^ proteinGroupsNaFiltered[, imputedLogCol]
+    
+}
+
+
+```
+
+:speech_balloon: _Why is the imputation done using the log values?_
+
+Let's look at the distribution of values now using different colors for imputed values.
+
+```{r imputed_distribution}
+
+# Make a data frame of values to plot
+
+nProteins <- nrow(proteinGroupsNaFiltered)
+
+intensitiesDF <- data.frame(
+    intensity = c(
+        proteinGroupsNaFiltered$A1_log_imputed,
+        proteinGroupsNaFiltered$A2_log_imputed,
+        proteinGroupsNaFiltered$A3_log_imputed,
+        proteinGroupsNaFiltered$B1_log_imputed,
+        proteinGroupsNaFiltered$B2_log_imputed,
+        proteinGroupsNaFiltered$B3_log_imputed
+    ),
+    sample = c(
+        rep("A1", nProteins),
+        rep("A2", nProteins),
+        rep("A3", nProteins),
+        rep("B1", nProteins),
+        rep("B2", nProteins),
+        rep("B3", nProteins)
+    ),
+    condition = c(
+        rep("A", nProteins),
+        rep("A", nProteins),
+        rep("A", nProteins),
+        rep("B", nProteins),
+        rep("B", nProteins),
+        rep("B", nProteins)
+    ),
+    replicate = c(
+        rep("1", nProteins),
+        rep("2", nProteins),
+        rep("3", nProteins),
+        rep("1", nProteins),
+        rep("2", nProteins),
+        rep("3", nProteins)
+    ),
+    imputed = c(
+        is.na(proteinGroupsNaFiltered$A1_log),
+        is.na(proteinGroupsNaFiltered$A2_log),
+        is.na(proteinGroupsNaFiltered$A3_log),
+        is.na(proteinGroupsNaFiltered$B1_log),
+        is.na(proteinGroupsNaFiltered$B2_log),
+        is.na(proteinGroupsNaFiltered$B3_log)
+    )
+)
+
+
+# Build plot
+
+histogram <- ggplot() + 
+    geom_histogram(data = intensitiesDF, mapping = aes(x = intensity, fill = imputed), bins = 20) +
+    facet_grid(condition ~ replicate)
+
+
+# Plot
+
+plot(histogram)
+
+
+
+```
+
+:speech_balloon: _What do you think of our imputation function?_
 
 ## Extraction of the quantitative columns
 
