@@ -240,7 +240,7 @@ plot(histogram)
 
 A very useful way to visualize quantitative distributions is to make box plots. This can be done using the `geom_boxplot` function.
 
-```{r facet_grid}
+```{r boxplot}
 
 boxPlot <- ggplot() + 
     geom_boxplot(data = intensitiesDF, mapping = aes(x = sample, y = intensity), na.rm = T)
@@ -486,7 +486,7 @@ As you might have noticed from the box plot of intensities, there seem to be min
 
 First, we express each intensity relatively to a reference intensity, as a ratio of intensities, this is called _normalization in rows_. Here, we hypothesize that proteins in condition _A_ have the most stable abundance, for each protein, we therefore divide the intensity to the median of intensities in _A_. Note that we work here on the actual intensities and not the log. 
 
-```{r imputation}
+```{r normalization_line}
 
 reference <- apply(X = proteinGroups[, c("A1_imputed", "A2_imputed", "A3_imputed")], FUN = median, MARGIN = 1, na.rm = T)
 
