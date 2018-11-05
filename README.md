@@ -41,14 +41,4 @@ This short [tutorial](Proteomics_quantification/quantitative_proteomics.md) take
 
 ![](Proteomics_quantification/images/volcano_UPS_B_FC-1.png)
 
-## Genome Wide Association
 
-This short [tutorial](https://github.com/mvaudel/tutorials/blob/master/Genome_Association/genome_association.md) shows how to draw some plots used in genome wide association.
-
-![](https://raw.githubusercontent.com/mvaudel/tutorials/master/Genome_Association/genome_association_files/figure-markdown_github/manhattan_plot-1.png)
-
-## Analysis of Expression Data
-
-This [tutorial](https://github.com/mvaudel/tutorials/blob/master/Expression_data/quantitative_proteomics.md) shows basic methods and visualization techniques for the interpretation of expression data using an example from quantitative proteomics.
-
-![](https://raw.githubusercontent.com/mvaudel/tutorials/master/Expression_data/quantitative_proteomics_files/figure-markdown_github/volcano_plot-1.png)
