@@ -19,7 +19,7 @@ The analysis of the raw data yielding the quantitative information constitutes a
 | [Skyline](https://skyline.ms/project/home/software/Skyline/begin.view) | Targeted quantification | Tool for targeted proteomics and metabolomics. |
 | [OpenMS](https://www.openms.de/) | Bioinformatic pipeline | Suite of tools for proteomics and metabolomics that can be chained to build pipelines. |
 | [TPP](http://tools.proteomecenter.org) | Bioinformatic pipeline | Suite of tools for proteomics that can be chained to build pipelines. |
-| [MS Stats](TODO) | Bioinformatic pipeline | Suite of tools for proteomics that can be chained to build pipelines. |
+| [MSstats](https://www.bioconductor.org/packages/release/bioc/html/MSstats.html) | R package | R package for the handling of proteomics data. |
 
 MaxQuant [(1)](#references) and Skyline [(2)](#references) are reference tools for the analysis of untargeted and targeted proteomics data, respectively. Both tools provide extensive educational material and are the place to start for beginners. We highly recommend attending their courses.
 
