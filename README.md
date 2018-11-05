@@ -42,3 +42,11 @@ This short [tutorial](Proteomics_quantification/quantitative_proteomics.md) take
 ![](Proteomics_quantification/images/volcano_UPS_B_FC-1.png)
 
 
+
+## Functional resources
+
+This short [tutorial](Functional_resources/functional_resources.md) queries Reactome and String using a set of genes.
+
+
+![](Functional_resources/images/t2d_subnetwork-1.png)
+
