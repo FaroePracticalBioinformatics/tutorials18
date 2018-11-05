@@ -24,7 +24,7 @@ print(paste0("# proteins excluded: ", nrow(proteinGroupsAfiltered) - nrow(protei
 
 :pencil2: Set the `alternative` and `paired` variables.
 
-```{r t-test_first}
+```{r t-test_params}
 
 alternative <- "two.sided"
 paired <- F

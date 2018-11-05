@@ -672,7 +672,7 @@ From the PCA plot, we could see that samples and proteins seem to form groups in
 
 hClustColumns <- c("rA1_log_norm", "rA2_log_norm", "rA3_log_norm", "rB1_log_norm", "rB2_log_norm", "rB3_log_norm")
 
-inputProteins <- as.matrix(proteinGroups[, ])
+inputProteins <- as.matrix(proteinGroups[, hClustColumns])
 inputSamples <- t(inputProteins)
 
 distMatrixProteins <- dist(inputProteins)
@@ -771,7 +771,7 @@ ratiosDF$x <- as.numeric(ratiosDF$orderedSamples)
 
 # Order proteins according to clustering results
 
-ratiosDF$orderedProteins <- factor(ratiosDF$proteinRank, levels = hclust$order)
+ratiosDF$orderedProteins <- factor(ratiosDF$proteinRank, levels = hClustProteins$order)
 ratiosDF$y <- as.numeric(ratiosDF$orderedProteins)
 
 # Adjust colors
