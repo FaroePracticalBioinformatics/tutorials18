@@ -39,9 +39,7 @@ This short [tutorial](Reporter_ions/4.2-Reporter-Ions.pdf) on reporter ions quan
 This short [tutorial](Proteomics_quantification/quantitative_proteomics.md) takes you through the processing of label free proteomics quantitative data. Many of the methods introduced can be reused with other types of quantitative data.
 
 
-![](Proteomics_quantification/)
-
-_Yout expression values deserve better than a bar plot with two stars!_
+![](Proteomics_quantification/images/volcano_UPS_B_FC-1.png)
 
 ## Genome Wide Association
 
