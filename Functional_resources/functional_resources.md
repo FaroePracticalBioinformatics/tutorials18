@@ -67,7 +67,7 @@ length(E(stringGraph))
 
 :pencil2: In average, how many edges are there per vertex?
 
-The number of edges per vertex is named the *degree* of a vertex. The degree distribution of a graph is a very important structural information.
+The number of edges per vertex is named the *degree* of a vertex. The degree distribution of a graph is a very important structural information [(2)](#references).
 
 ``` r
 stringDegree <- degree(graph = stringGraph)
@@ -148,3 +148,4 @@ References
 ----------
 
 1.  [Developing a network view of type 2 diabetes risk pathways through integration of genetic, genomic and functional data](https://www.biorxiv.org/content/early/2018/06/21/350181)
+2.  [Network Science](http://networksciencebook.com/)

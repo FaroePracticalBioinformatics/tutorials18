@@ -317,6 +317,14 @@ print(paste0("# proteins excluded: ", nrow(proteinGroupsInput) - nrow(proteinGro
 
 ```
 
+```{r NA_B}
+
+proteinGroups <- ?
+
+print(paste0("# proteins excluded: ", nrow(proteinGroupsAfiltered) - nrow(proteinGroups)))
+
+```
+
 :pencil2: Do the same for condition _B_ and save the result in a data frame called `proteinGroups`.
 
 We can check the number of missing values in each condition using the `table` function again.
@@ -866,6 +874,13 @@ grid.draw(result)
 We are going to evaluate the significance of the differences between A and B using a t-test. Here is an example for the first protein.
 
 :pencil2: Set the `alternative` and `paired` variables.
+
+```{r t-test_params}
+
+alternative <- ?
+paired <- ?
+
+```
 
 ```{r t-test_first}
 

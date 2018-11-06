@@ -382,19 +382,12 @@ print(paste0("# proteins excluded: ", nrow(proteinGroupsInput) - nrow(proteinGro
 
     ## [1] "# proteins excluded: 93"
 
+
+    proteinGroups <- ?
+
+    print(paste0("# proteins excluded: ", nrow(proteinGroupsAfiltered) - nrow(proteinGroups)))
+
 :pencil2: Do the same for condition *B* and save the result in a data frame called `proteinGroups`.
-
-``` r
-bValues <- proteinGroupsAfiltered[, c("B1", "B2", "B3")]
-bNA <- apply(X = bValues, FUN = is.na, MARGIN = c(1, 2))
-bNaSum <- apply(X = bNA, FUN = sum, MARGIN = 1)
-
-proteinGroups <- proteinGroupsAfiltered[bNaSum <= 1, ]
-
-print(paste0("# proteins excluded: ", nrow(proteinGroupsAfiltered) - nrow(proteinGroups)))
-```
-
-    ## [1] "# proteins excluded: 75"
 
 We can check the number of missing values in each condition using the `table` function again.
 
@@ -953,10 +946,9 @@ We are going to evaluate the significance of the differences between A and B usi
 
 :pencil2: Set the `alternative` and `paired` variables.
 
-``` r
-alternative <- "two.sided"
-paired <- F
-```
+
+    alternative <- ?
+    paired <- ?
 
 ``` r
 valuesA <- as.numeric(proteinGroups[1, c("rA1_log_norm", "rA2_log_norm", "rA3_log_norm")])
@@ -968,13 +960,13 @@ t.test(x = valuesA, y = valuesB, alternative = alternative, paired = paired)
     ##  Welch Two Sample t-test
     ## 
     ## data:  valuesA and valuesB
-    ## t = 5.194, df = 2.0092, p-value = 0.03479
+    ## t = 4.7425, df = 2.0073, p-value = 0.04141
     ## alternative hypothesis: true difference in means is not equal to 0
     ## 95 percent confidence interval:
-    ##   1.381557 14.385902
+    ##   0.7737305 15.3608038
     ## sample estimates:
     ##   mean of x   mean of y 
-    ## -0.03689275 -7.92062241
+    ## -0.03689275 -8.10415990
 
 :speech\_balloon: *Why did we use two-sided non-paired?*
 
