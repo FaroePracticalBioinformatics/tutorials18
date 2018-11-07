@@ -329,6 +329,7 @@ print(paste0("# proteins excluded: ", nrow(proteinGroupsAfiltered) - nrow(protei
 
 We can check the number of missing values in each condition using the `table` function again.
 
+
 ```{r NA_table}
 
 aValues <- proteinGroups[, c("A1", "A2", "A3")]
